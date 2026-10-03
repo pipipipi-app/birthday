@@ -107,32 +107,43 @@
 
   </main>
 
-  <script>
-    const name = localStorage.getItem("birthday_name");
-    const birthday = localStorage.getItem("birthday_date");
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
+
+  const mySupabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  async function loadMyPage() {
+    const {
+      data: { user },
+      error
+    } = await mySupabase.auth.getUser();
+
+    if (error || !user) {
+      alert("ログイン情報が見つかりません。");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const userData = user.user_metadata;
 
     document.getElementById("userName").textContent =
-      name ? name + "さん" : "こんにちは！";
+      userData.name ? userData.name + "さん" : "こんにちは！";
 
     document.getElementById("userBirthday").textContent =
-      birthday ? birthday : "未登録";
+      userData.birthday ? userData.birthday : "未登録";
 
-    const savedCode = localStorage.getItem("birthday_friend_code");
+    document.getElementById("friendCode").textContent =
+      userData.friend_code ? userData.friend_code : "未登録";
+  }
 
-    if (savedCode) {
-      document.getElementById("friendCode").textContent = savedCode;
-    } else {
-      const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-      let code = "";
-
-      for (let i = 0; i < 8; i++) {
-        code += characters[Math.floor(Math.random() * characters.length)];
-      }
-
-      localStorage.setItem("birthday_friend_code", code);
-      document.getElementById("friendCode").textContent = code;
-    }
-  </script>
+  loadMyPage();
+</script>
 
 </body>
 </html>
