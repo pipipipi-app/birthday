@@ -91,19 +91,21 @@
         type="date"
         id="birthday"
       >
-<label for="email">メールアドレス</label>
-<input
-  type="email"
-  id="email"
-  placeholder="メールアドレス"
->
 
-<label for="password">パスワード</label>
-<input
-  type="password"
-  id="password"
-  placeholder="パスワード"
->
+      <label for="email">メールアドレス</label>
+      <input
+        type="email"
+        id="email"
+        placeholder="メールアドレス"
+      >
+
+      <label for="password">パスワード</label>
+      <input
+        type="password"
+        id="password"
+        placeholder="パスワード"
+      >
+
       <button type="submit">
         アカウントを作る
       </button>
@@ -112,55 +114,56 @@
 
   </main>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
-</script>
-<script>
-  document.querySelector(".form").addEventListener("submit", async function(event) {
-    event.preventDefault();
+  <script>
+    const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
 
-    const name = document.getElementById("name").value.trim();
-    const birthday = document.getElementById("birthday").value;
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+    const mySupabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
 
-    if (!name || !birthday || !email || !password) {
-      alert("全部入力してね！");
-      return;
-    }
+    document.querySelector(".form").addEventListener("submit", async function(event) {
+      event.preventDefault();
 
-    if (password.length < 6) {
-      alert("パスワードは6文字以上にしてね！");
-      return;
-    }
+      const name = document.getElementById("name").value.trim();
+      const birthday = document.getElementById("birthday").value;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
 
-    const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          name: name,
-          birthday: birthday
-        }
+      if (!name || !birthday || !email || !password) {
+        alert("全部入力してね！");
+        return;
       }
+
+      if (password.length < 6) {
+        alert("パスワードは6文字以上にしてね！");
+        return;
+      }
+
+      const { data, error } = await mySupabase.auth.signUp({
+        email: email,
+        password: password,
+        options: {
+          data: {
+            name: name,
+            birthday: birthday
+          }
+        }
+      });
+
+      if (error) {
+        alert("アカウント作成に失敗しました。\n" + error.message);
+        return;
+      }
+
+      alert("確認メールを送ったよ！メールを確認してね📧");
+
+      window.location.href = "mypage.html";
     });
+  </script>
 
-    if (error) {
-      alert("アカウント作成に失敗しました。\n" + error.message);
-      return;
-    }
-
-    alert("確認メールを送ったよ！メールを確認してね📧");
-
-    window.location.href = "mypage.html";
-  });
-</script>
 </body>
 </html>
