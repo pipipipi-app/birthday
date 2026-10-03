@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>友達追加 | #BirthDay</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #fff7fb;
+      font-family: sans-serif;
+      color: #5f4b55;
+    }
+
+    header {
+      padding: 20px;
+      background: white;
+      border-bottom: 1px solid #f0dce5;
+      font-weight: bold;
+    }
+
+    .container {
+      width: min(90%, 500px);
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 30px 20px;
+      box-shadow: 0 4px 20px rgba(150, 100, 120, 0.08);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #e8cbd7;
+      border-radius: 12px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 15px;
+      border: none;
+      border-radius: 999px;
+      background: #e9a9c3;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #9a7182;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    🎂 #BirthDay
+  </header>
+
+  <main class="container">
+
+    <section class="card">
+
+      <h1>👯‍♀️ 友達を追加</h1>
+
+      <p class="description">
+        友達コードを入力して友達を追加しよう！
+      </p>
+
+      <label for="friendCode">友達コード</label>
+
+      <input
+        type="text"
+        id="friendCode"
+        placeholder="8文字の友達コード"
+        maxlength="8"
+        autocomplete="off"
+      >
+
+      <button type="button" onclick="addFriend()">
+        友達を追加
+      </button>
+
+      <a href="mypage.html" class="back">
+        ← マイページに戻る
+      </a>
+
+    </section>
+
+  </main>
+
+  <script>
+    function addFriend() {
+      const code = document.getElementById("friendCode").value.trim();
+
+      if (!code) {
+        alert("友達コードを入力してね！");
+        return;
+      }
+
+      alert("友達コード「" + code + "」を検索しました！");
+    }
+  </script>
+
+</body>
+</html>

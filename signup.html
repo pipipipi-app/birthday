@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>アカウント作成 | #BirthDay</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #fff7fb;
+      font-family: sans-serif;
+      color: #5f4b55;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: min(90%, 400px);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .message {
+      margin-bottom: 30px;
+    }
+
+    .form {
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin: 18px 0 8px;
+      font-weight: bold;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #e8cbd7;
+      border-radius: 12px;
+      font-size: 16px;
+      background: white;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 30px;
+      padding: 15px;
+      border: none;
+      border-radius: 999px;
+      background: #e9a9c3;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <h1>🎂 #BirthDay</h1>
+
+    <p class="message">
+      あなたのことを教えてね
+    </p>
+
+    <form class="form">
+
+      <label for="name">名前</label>
+      <input
+        type="text"
+        id="name"
+        placeholder="表示したい名前"
+      >
+
+      <label for="birthday">誕生日</label>
+      <input
+        type="date"
+        id="birthday"
+      >
+<label for="email">メールアドレス</label>
+<input
+  type="email"
+  id="email"
+  placeholder="メールアドレス"
+>
+
+<label for="password">パスワード</label>
+<input
+  type="password"
+  id="password"
+  placeholder="パスワード"
+>
+      <button type="submit">
+        アカウントを作る
+      </button>
+
+    </form>
+
+  </main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
+
+  const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+</script>
+<script>
+  document.querySelector(".form").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const birthday = document.getElementById("birthday").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!name || !birthday || !email || !password) {
+      alert("全部入力してね！");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("パスワードは6文字以上にしてね！");
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          name: name,
+          birthday: birthday
+        }
+      }
+    });
+
+    if (error) {
+      alert("アカウント作成に失敗しました。\n" + error.message);
+      return;
+    }
+
+    alert("確認メールを送ったよ！メールを確認してね📧");
+
+    window.location.href = "mypage.html";
+  });
+</script>
+</body>
+</html>

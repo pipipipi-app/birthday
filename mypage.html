@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>マイページ | #BirthDay</title>
+
+  <style>
+    .add-friend-button {
+  display: block;
+  margin-top: 20px;
+  padding: 14px;
+  border-radius: 999px;
+  background: #e9a9c3;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #fff7fb;
+      font-family: sans-serif;
+      color: #5f4b55;
+    }
+
+    header {
+      padding: 20px;
+      background: white;
+      border-bottom: 1px solid #f0dce5;
+      font-weight: bold;
+    }
+
+    .container {
+      width: min(90%, 500px);
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    .profile {
+      text-align: center;
+      background: white;
+      border-radius: 24px;
+      padding: 30px 20px;
+      box-shadow: 0 4px 20px rgba(150, 100, 120, 0.08);
+    }
+
+    .icon {
+      font-size: 60px;
+    }
+
+    h1 {
+      margin: 10px 0;
+      font-size: 28px;
+    }
+
+    .birthday {
+      margin-top: 8px;
+    }
+
+    .code {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 14px;
+      background: #fff1f6;
+      font-size: 14px;
+    }
+
+    .code strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 20px;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    🎂 #BirthDay
+  </header>
+
+  <main class="container">
+
+    <section class="profile">
+
+      <div class="icon">🎀</div>
+
+      <h1 id="userName">こんにちは！</h1>
+
+      <p class="birthday">
+        🎂 誕生日：<span id="userBirthday"></span>
+      </p>
+
+      <div class="code">
+        あなたの友達コード
+        <strong id="friendCode">読み込み中...</strong>
+      </div>
+      <a href="friends.html" class="add-friend-button">
+  ＋ 友達を追加
+</a>
+
+    </section>
+
+  </main>
+
+  <script>
+    const name = localStorage.getItem("birthday_name");
+    const birthday = localStorage.getItem("birthday_date");
+
+    document.getElementById("userName").textContent =
+      name ? name + "さん" : "こんにちは！";
+
+    document.getElementById("userBirthday").textContent =
+      birthday ? birthday : "未登録";
+
+    const savedCode = localStorage.getItem("birthday_friend_code");
+
+    if (savedCode) {
+      document.getElementById("friendCode").textContent = savedCode;
+    } else {
+      const characters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let code = "";
+
+      for (let i = 0; i < 8; i++) {
+        code += characters[Math.floor(Math.random() * characters.length)];
+      }
+
+      localStorage.setItem("birthday_friend_code", code);
+      document.getElementById("friendCode").textContent = code;
+    }
+  </script>
+
+</body>
+</html>
