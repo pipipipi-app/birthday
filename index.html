@@ -10,41 +10,40 @@
     body {
       margin: 0;
       min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       background: #fff7fb;
       font-family: sans-serif;
       color: #5f4b55;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
 
     .container {
-      text-align: center;
-      padding: 40px 24px;
-    }
-
-    .cake {
-      font-size: 70px;
-      margin-bottom: 20px;
+      width: min(90%, 400px);
     }
 
     h1 {
       font-size: 42px;
-      margin: 0 0 12px;
+      margin-bottom: 10px;
     }
 
-    .subtitle {
+    .message {
       font-size: 17px;
-      margin-bottom: 32px;
+      line-height: 1.8;
+      margin-bottom: 40px;
     }
 
-    .button {
-      display: inline-block;
-      padding: 14px 32px;
+    .start-button {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 16px;
       border-radius: 999px;
       background: #e9a9c3;
       color: white;
       text-decoration: none;
+      font-size: 17px;
       font-weight: bold;
     }
   </style>
@@ -54,15 +53,14 @@
 
   <main class="container">
 
-    <div class="cake">🎂</div>
+    <h1>🎂 #BirthDay</h1>
 
-    <h1>#BirthDay</h1>
-
-    <p class="subtitle">
-      大切な人の誕生日を、もっと大切に。
+    <p class="message">
+      大切な人の誕生日を<br>
+      もっと特別に。
     </p>
 
-    <a href="signup.html" class="button">
+    <a href="login.html" class="start-button">
       はじめる
     </a>
 
