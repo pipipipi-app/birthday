@@ -105,7 +105,7 @@
       アカウントを作ろう！
     </p>
 
-    <form>
+    <form id="signupForm">
 
       <label for="name">
         名前
@@ -167,62 +167,68 @@
 
   </main>
 
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
-);
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
-console.log("Supabase読み込みOK");
+  <script>
+    const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
 
-const mySupabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
 
-  const form = document.querySelector("form");
+    const mySupabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
 
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+    const form = document.getElementById("signupForm");
 
-    const name = document.getElementById("name").value.trim();
-    const birthday = document.getElementById("birthday").value;
-    const friendCode = document.getElementById("friendCode").value.trim();
-    const password = document.getElementById("password").value;
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
-    if (!name || !birthday || !friendCode || !password) {
-      alert("全部入力してね！");
-      return;
-    }
+      const name = document.getElementById("name").value.trim();
+      const birthday = document.getElementById("birthday").value;
+      const friendCode = document.getElementById("friendCode").value.trim();
+      const password = document.getElementById("password").value;
 
-    const internalEmail =
-      friendCode.toLowerCase() + "@birthday.local";
+      if (!name || !birthday || !friendCode || !password) {
+        alert("全部入力してね！");
+        return;
+      }
 
-    const { data, error } = await mySupabase.auth.signUp({
-      email: internalEmail,
-      password: password,
-      options: {
-        data: {
-          name: name,
-          birthday: birthday,
-          friend_code: friendCode
+      const internalEmail =
+        friendCode.toLowerCase() + "@birthday.local";
+
+      const { data, error } = await mySupabase.auth.signUp({
+        email: internalEmail,
+        password: password,
+        options: {
+          data: {
+            name: name,
+            birthday: birthday,
+            friend_code: friendCode
+          }
         }
+      });
+
+      if (error) {
+        if (
+          error.message.includes("already registered") ||
+          error.message.includes("already been registered")
+        ) {
+          alert(
+            "この友達コードはすでに使われています。別のコードにしてね！"
+          );
+        } else {
+          alert("登録できませんでした。\n" + error.message);
+        }
+
+        return;
       }
+
+      alert("アカウントを作成しました！🎂");
+
+      window.location.href = "mypage.html";
     });
+  </script>
 
-    if (error) {
-      if (error.message.includes("already registered")) {
-        alert("この友達コードはすでに使われています。別のコードにしてね！");
-      } else {
-        alert("登録できませんでした。\n" + error.message);
-      }
-      return;
-    }
-
-    alert("アカウントを作成しました！🎂");
-
-    window.location.href = "mypage.html";
-  });
-</script>
 </body>
 </html>
