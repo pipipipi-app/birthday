@@ -74,6 +74,26 @@
       cursor: pointer;
     }
 
+    .result {
+      margin-top: 25px;
+      padding: 18px;
+      background: #fff7fb;
+      border-radius: 16px;
+      text-align: center;
+      display: none;
+    }
+
+    .result-name {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .result-code {
+      font-size: 14px;
+      color: #8b747e;
+    }
+
     .back {
       display: block;
       text-align: center;
@@ -114,6 +134,11 @@
         友達を追加
       </button>
 
+      <div id="result" class="result">
+        <div id="resultName" class="result-name"></div>
+        <div id="resultCode" class="result-code"></div>
+      </div>
+
       <a href="mypage.html" class="back">
         ← マイページに戻る
       </a>
@@ -122,16 +147,68 @@
 
   </main>
 
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
   <script>
-    function addFriend() {
-      const code = document.getElementById("friendCode").value.trim();
+    const SUPABASE_URL =
+      "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
+
+    const mySupabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    async function addFriend() {
+      const code =
+        document.getElementById("friendCode").value.trim();
+
+      const result =
+        document.getElementById("result");
+
+      const resultName =
+        document.getElementById("resultName");
+
+      const resultCode =
+        document.getElementById("resultCode");
 
       if (!code) {
         alert("友達コードを入力してね！");
         return;
       }
 
-      alert("友達コード「" + code + "」を検索しました！");
+      result.style.display = "none";
+
+      const { data, error } =
+        await mySupabase.rpc(
+          "search_profile_by_friend_code",
+          {
+            search_code: code
+          }
+        );
+
+      if (error) {
+        alert("検索中にエラーが発生しました。");
+        console.error(error);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        alert("この友達コードの人は見つかりませんでした。");
+        return;
+      }
+
+      const friend = data[0];
+
+      resultName.textContent =
+        friend.name + " さん";
+
+      resultCode.textContent =
+        "友達コード：" + friend.friend_code;
+
+      result.style.display = "block";
     }
   </script>
 
