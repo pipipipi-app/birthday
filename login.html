@@ -105,7 +105,7 @@
       おかえりなさい！
     </p>
 
-    <form class="form">
+    <form class="form" id="loginForm">
 
       <label for="friendCode">
         友達コード
@@ -116,6 +116,7 @@
         id="friendCode"
         placeholder="友達コードを入力"
         autocomplete="username"
+        required
       >
 
       <label for="password">
@@ -127,6 +128,7 @@
         id="password"
         placeholder="パスワードを入力"
         autocomplete="current-password"
+        required
       >
 
       <button type="submit" class="login-button">
@@ -145,6 +147,52 @@
     </a>
 
   </main>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY = "ここに自分のPublishable Key";
+
+    const mySupabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const form = document.getElementById("loginForm");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const friendCode =
+        document.getElementById("friendCode").value.trim();
+
+      const password =
+        document.getElementById("password").value;
+
+      if (!friendCode || !password) {
+        alert("友達コードとパスワードを入力してね！");
+        return;
+      }
+
+      const internalEmail =
+        friendCode.toLowerCase() + "@birthday.local";
+
+      const { data, error } =
+        await mySupabase.auth.signInWithPassword({
+          email: internalEmail,
+          password: password
+        });
+
+      if (error) {
+        alert("友達コードまたはパスワードが違います。");
+        return;
+      }
+
+      window.location.href = "mypage.html";
+    });
+  </script>
 
 </body>
 </html>
