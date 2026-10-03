@@ -167,5 +167,60 @@
 
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZY1XWQ_27hFQpO1";
+
+  const mySupabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  const form = document.querySelector("form");
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const birthday = document.getElementById("birthday").value;
+    const friendCode = document.getElementById("friendCode").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!name || !birthday || !friendCode || !password) {
+      alert("全部入力してね！");
+      return;
+    }
+
+    const internalEmail =
+      friendCode.toLowerCase() + "@birthday.local";
+
+    const { data, error } = await mySupabase.auth.signUp({
+      email: internalEmail,
+      password: password,
+      options: {
+        data: {
+          name: name,
+          birthday: birthday,
+          friend_code: friendCode
+        }
+      }
+    });
+
+    if (error) {
+      if (error.message.includes("already registered")) {
+        alert("この友達コードはすでに使われています。別のコードにしてね！");
+      } else {
+        alert("登録できませんでした。\n" + error.message);
+      }
+      return;
+    }
+
+    alert("アカウントを作成しました！🎂");
+
+    window.location.href = "mypage.html";
+  });
+</script>
 </body>
 </html>
