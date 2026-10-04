@@ -60,11 +60,39 @@
       もっと特別に。
     </p>
 
-    <a href="login.html" class="start-button">
+    <a href="login.html" class="start-button" id="startButton">
       はじめる
     </a>
 
   </main>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
+
+    const mySupabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
+
+    const startButton = document.getElementById("startButton");
+
+    startButton.addEventListener("click", async (event) => {
+      event.preventDefault();
+
+      const {
+        data: { user }
+      } = await mySupabase.auth.getUser();
+
+      if (user) {
+        window.location.href = "mypage.html";
+      } else {
+        window.location.href = "login.html";
+      }
+    });
+  </script>
 
 </body>
 </html>
