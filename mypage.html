@@ -8,15 +8,29 @@
 
   <style>
     .add-friend-button {
-  display: block;
-  margin-top: 20px;
-  padding: 14px;
-  border-radius: 999px;
-  background: #e9a9c3;
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-}
+      display: block;
+      margin-top: 20px;
+      padding: 14px;
+      border-radius: 999px;
+      background: #e9a9c3;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .logout-button {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      padding: 14px;
+      border: none;
+      border-radius: 999px;
+      background: #f3dce6;
+      color: #8a6875;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
     body {
       margin: 0;
@@ -99,9 +113,14 @@
         あなたの友達コード
         <strong id="friendCode">読み込み中...</strong>
       </div>
+
       <a href="friends.html" class="add-friend-button">
-  ＋ 友達を追加
-</a>
+        ＋ 友達を追加
+      </a>
+
+      <button id="logoutButton" class="logout-button">
+        ログアウト
+      </button>
 
     </section>
 
@@ -109,41 +128,54 @@
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
-<script>
-  const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
+  <script>
+    const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
 
-  const mySupabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
+    const mySupabase = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_PUBLISHABLE_KEY
+    );
 
-  async function loadMyPage() {
-    const {
-      data: { user },
-      error
-    } = await mySupabase.auth.getUser();
+    async function loadMyPage() {
+      const {
+        data: { user },
+        error
+      } = await mySupabase.auth.getUser();
 
-    if (error || !user) {
-      alert("ログイン情報が見つかりません。");
-      window.location.href = "login.html";
-      return;
+      if (error || !user) {
+        alert("ログイン情報が見つかりません。");
+        window.location.href = "login.html";
+        return;
+      }
+
+      const userData = user.user_metadata;
+
+      document.getElementById("userName").textContent =
+        userData.name ? userData.name + "さん" : "こんにちは！";
+
+      document.getElementById("userBirthday").textContent =
+        userData.birthday ? userData.birthday : "未登録";
+
+      document.getElementById("friendCode").textContent =
+        userData.friend_code ? userData.friend_code : "未登録";
     }
 
-    const userData = user.user_metadata;
+    async function logout() {
+      const { error } = await mySupabase.auth.signOut();
 
-    document.getElementById("userName").textContent =
-      userData.name ? userData.name + "さん" : "こんにちは！";
+      if (error) {
+        alert("ログアウトできませんでした。");
+        return;
+      }
 
-    document.getElementById("userBirthday").textContent =
-      userData.birthday ? userData.birthday : "未登録";
+      window.location.href = "login.html";
+    }
 
-    document.getElementById("friendCode").textContent =
-      userData.friend_code ? userData.friend_code : "未登録";
-  }
+    document.getElementById("logoutButton").addEventListener("click", logout);
 
-  loadMyPage();
-</script>
+    loadMyPage();
+  </script>
 
 </body>
 </html>
