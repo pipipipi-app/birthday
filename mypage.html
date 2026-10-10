@@ -5,152 +5,70 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>マイページ | #BirthDay</title>
-
   <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #fff7fb;
-      font-family: sans-serif;
-      color: #5f4b55;
-    }
-    header {
-      padding: 20px;
-      background: white;
-      border-bottom: 1px solid #f0dce5;
-      font-weight: bold;
-    }
-    .container {
-      width: min(90%, 500px);
-      margin: 0 auto;
-      padding: 30px 0 40px;
-    }
-    .profile, .friends-card {
-      background: white;
-      border-radius: 24px;
-      padding: 25px 20px;
-      box-shadow: 0 4px 20px rgba(150, 100, 120, 0.08);
-      margin-bottom: 20px;
-    }
+    body { margin: 0; min-height: 100vh; background: #fff7fb; font-family: sans-serif; color: #5f4b55; }
+    header { padding: 20px; background: white; border-bottom: 1px solid #f0dce5; font-weight: bold; }
+    .container { width: min(90%, 500px); margin: 0 auto; padding: 30px 0 40px; }
+    .profile, .friends-card { background: white; border-radius: 24px; padding: 25px 20px; box-shadow: 0 4px 20px rgba(150,100,120,.08); margin-bottom: 20px; }
     .profile { text-align: center; }
     .icon { font-size: 60px; }
     h1 { margin: 10px 0; font-size: 28px; }
     .birthday { margin-top: 8px; }
-    .code {
-      margin-top: 25px;
-      padding: 15px;
-      border-radius: 14px;
-      background: #fff1f6;
-      font-size: 14px;
-    }
-    .code strong {
-      display: block;
-      margin-top: 5px;
-      font-size: 20px;
-      letter-spacing: 2px;
-    }
-    .add-friend-button, .logout-button {
-      display: block;
-      box-sizing: border-box;
-      width: 100%;
-      margin-top: 14px;
-      padding: 14px;
-      border: none;
-      border-radius: 999px;
-      text-align: center;
-      font-weight: bold;
-      font-size: 16px;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    .add-friend-button {
-      background: #e9a9c3;
-      color: white;
-    }
-    .logout-button {
-      background: #f3dce6;
-      color: #8a6875;
-    }
-    .friends-card h2 {
-      margin-top: 0;
-      font-size: 22px;
-      color: #9d5475;
-    }
-    .friend-item {
-      padding: 15px 0;
-      border-bottom: 1px solid #f3e3ea;
-    }
+    .code { margin-top: 25px; padding: 15px; border-radius: 14px; background: #fff1f6; font-size: 14px; }
+    .code strong { display: block; margin-top: 5px; font-size: 20px; letter-spacing: 2px; }
+    .add-friend-button, .logout-button { display: block; box-sizing: border-box; width: 100%; margin-top: 14px; padding: 14px; border: none; border-radius: 999px; text-align: center; font-weight: bold; font-size: 16px; text-decoration: none; cursor: pointer; }
+    .add-friend-button { background: #e9a9c3; color: white; }
+    .logout-button { background: #f3dce6; color: #8a6875; }
+    .friends-card h2, .friends-card h3 { color: #9d5475; }
+    .friend-item { padding: 15px 0; border-bottom: 1px solid #f3e3ea; }
     .friend-item:last-child { border-bottom: none; }
-    .friend-name {
-      font-weight: bold;
-      font-size: 17px;
-    }
-    .friend-birthday {
-      margin-top: 6px;
-      font-size: 14px;
-      color: #8b747e;
-    }
-    .message {
-      color: #8b747e;
-      text-align: center;
-      line-height: 1.7;
-    }
-    .friend-code {
-      margin-top: 5px;
-      font-size: 12px;
-      color: #a18b95;
-    }
+    .friend-name { font-weight: bold; font-size: 17px; }
+    .friend-birthday { margin-top: 6px; font-size: 14px; color: #8b747e; }
+    .message { color: #8b747e; text-align: center; line-height: 1.7; }
+    .friend-code { margin-top: 5px; font-size: 12px; color: #a18b95; }
+    .actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .actions button { flex: 1; min-width: 110px; border: 0; border-radius: 12px; padding: 10px 8px; cursor: pointer; font-weight: bold; }
+    .remove-button { background: #f7e8ee; color: #8a6875; }
+    .block-button { background: #fbe0e0; color: #9c4545; }
+    .unblock-button { background: #e7f3e7; color: #47734b; width: 100%; padding: 11px; border: 0; border-radius: 12px; cursor: pointer; font-weight: bold; }
   </style>
 </head>
 <body>
   <header>🎂 #BirthDay</header>
-
   <main class="container">
     <section class="profile">
       <div class="icon">🎀</div>
       <h1 id="userName">こんにちは！</h1>
-
-      <p class="birthday">
-        🎂 誕生日：<span id="userBirthday"></span>
-      </p>
-
-      <div class="code">
-        あなたの友達コード
-        <strong id="friendCode">読み込み中...</strong>
-      </div>
-
-      <a href="friends.html" class="add-friend-button">
-        ＋ 友達を追加
-      </a>
-
-      <button id="logoutButton" class="logout-button">
-        ログアウト
-      </button>
+      <p class="birthday">🎂 誕生日：<span id="userBirthday"></span></p>
+      <div class="code">あなたの友達コード<strong id="friendCode">読み込み中...</strong></div>
+      <a href="friends.html" class="add-friend-button">＋ 友達を追加</a>
+      <button id="logoutButton" class="logout-button">ログアウト</button>
     </section>
 
     <section class="friends-card">
       <h2>👯‍♀️ 友達リスト</h2>
-      <div id="friendsList" class="message">友達を読み込み中...</div>
+      <div id="friendsList" class="message">読み込み中...</div>
+    </section>
+
+    <section class="friends-card">
+      <h2>🚫 ブロックリスト</h2>
+      <p class="message">ブロックした相手は友達リストに表示されなくなるよ。</p>
+      <div id="blockedList" class="message">読み込み中...</div>
     </section>
   </main>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script>
-    const SUPABASE_URL =
-      "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+    const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
 
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
 
     const mySupabase = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY
+      SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY
     );
 
     async function loadMyPage() {
-      const {
-        data: { user },
-        error
-      } = await mySupabase.auth.getUser();
+      const { data: { user }, error } = await mySupabase.auth.getUser();
 
       if (error || !user) {
         alert("ログイン情報が見つかりません。");
@@ -158,41 +76,47 @@
         return;
       }
 
-      const userData = user.user_metadata || {};
-
+      const meta = user.user_metadata || {};
       document.getElementById("userName").textContent =
-        userData.name ? userData.name + "さん" : "こんにちは！";
-
+        meta.name ? meta.name + "さん" : "こんにちは！";
       document.getElementById("userBirthday").textContent =
-        userData.birthday || "未登録";
-
+        meta.birthday || "未登録";
       document.getElementById("friendCode").textContent =
-        userData.friend_code || "未登録";
+        meta.friend_code || "未登録";
 
-      await loadFriends();
+      await Promise.all([loadFriends(), loadBlocked()]);
+    }
+
+    function makeButton(label, className, action) {
+      const button = document.createElement("button");
+      button.textContent = label;
+      button.className = className;
+      button.addEventListener("click", action);
+      return button;
     }
 
     async function loadFriends() {
       const list = document.getElementById("friendsList");
+      list.className = "message";
       list.textContent = "友達を読み込み中...";
 
       const { data, error } = await mySupabase.rpc("get_my_friends");
 
       if (error) {
         console.error(error);
-        list.textContent =
-          "友達を読み込めませんでした。ページを再読み込みしてね。";
+        list.textContent = "友達を読み込めませんでした。";
         return;
       }
 
+      list.replaceChildren();
+
       if (!data || data.length === 0) {
-        list.textContent =
-          "まだ友達がいないみたい！「＋ 友達を追加」から追加してね 🎀";
+        list.className = "message";
+        list.textContent = "友達がまだいないよ 🎀";
         return;
       }
 
       list.className = "";
-      list.replaceChildren();
 
       data.forEach((friend) => {
         const item = document.createElement("div");
@@ -204,27 +128,117 @@
 
         const birthday = document.createElement("div");
         birthday.className = "friend-birthday";
-        birthday.textContent = "🎂 誕生日：" +
-          (friend.birthday || "未登録");
+        birthday.textContent = "🎂 誕生日：" + (friend.birthday || "未登録");
 
         const code = document.createElement("div");
         code.className = "friend-code";
-        code.textContent = "友達コード：" +
-          (friend.friend_code || "未登録");
+        code.textContent = "友達コード：" + friend.friend_code;
 
-        item.append(name, birthday, code);
+        const actions = document.createElement("div");
+        actions.className = "actions";
+
+        actions.append(
+          makeButton("👋 友達を削除", "remove-button", async () => {
+            if (!confirm(friend.name + " さんを友達リストから削除する？")) return;
+
+            const { error } = await mySupabase.rpc("remove_friend_by_code", {
+              search_code: friend.friend_code
+            });
+
+            if (error) {
+              console.error(error);
+              alert("削除できませんでした。");
+              return;
+            }
+
+            alert("友達リストから削除したよ。");
+            await loadFriends();
+          }),
+          makeButton("🚫 ブロック", "block-button", async () => {
+            if (!confirm(friend.name + " さんをブロックする？友達関係も解除されるよ。")) return;
+
+            const { error } = await mySupabase.rpc("block_user_by_code", {
+              search_code: friend.friend_code
+            });
+
+            if (error) {
+              console.error(error);
+              alert("ブロックできませんでした。");
+              return;
+            }
+
+            alert("ブロックしました。");
+            await Promise.all([loadFriends(), loadBlocked()]);
+          })
+        );
+
+        item.append(name, birthday, code, actions);
+        list.appendChild(item);
+      });
+    }
+
+    async function loadBlocked() {
+      const list = document.getElementById("blockedList");
+      list.className = "message";
+      list.textContent = "ブロックリストを読み込み中...";
+
+      const { data, error } = await mySupabase.rpc("get_my_blocks");
+
+      if (error) {
+        console.error(error);
+        list.textContent = "ブロックリストの取得準備がまだできていないよ。";
+        return;
+      }
+
+      list.replaceChildren();
+
+      if (!data || data.length === 0) {
+        list.textContent = "ブロックしている相手はいないよ。";
+        return;
+      }
+
+      list.className = "";
+
+      data.forEach((person) => {
+        const item = document.createElement("div");
+        item.className = "friend-item";
+
+        const name = document.createElement("div");
+        name.className = "friend-name";
+        name.textContent = "🚫 " + (person.name || "名前未登録") + " さん";
+
+        const code = document.createElement("div");
+        code.className = "friend-code";
+        code.textContent = "友達コード：" + person.friend_code;
+
+        const unblock = makeButton("ブロックを解除", "unblock-button", async () => {
+          if (!confirm(person.name + " さんのブロックを解除する？")) return;
+
+          const { error } = await mySupabase.rpc("unblock_user_by_code", {
+            search_code: person.friend_code
+          });
+
+          if (error) {
+            console.error(error);
+            alert("ブロックを解除できませんでした。");
+            return;
+          }
+
+          alert("ブロックを解除したよ。友達に戻すには、もう一度追加してね。");
+          await loadBlocked();
+        });
+
+        item.append(name, code, unblock);
         list.appendChild(item);
       });
     }
 
     async function logout() {
       const { error } = await mySupabase.auth.signOut();
-
       if (error) {
         alert("ログアウトできませんでした。");
         return;
       }
-
       window.location.href = "login.html";
     }
 
