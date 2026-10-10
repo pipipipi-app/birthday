@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -94,6 +95,10 @@
       color: #8b747e;
     }
 
+    .add-button {
+      background: #e9a9c3;
+    }
+
     .back {
       display: block;
       text-align: center;
@@ -137,6 +142,14 @@
       <div id="result" class="result">
         <div id="resultName" class="result-name"></div>
         <div id="resultCode" class="result-code"></div>
+
+        <button
+          type="button"
+          class="add-button"
+          onclick="confirmAddFriend()"
+        >
+          ＋ この人と友達になる
+        </button>
       </div>
 
       <a href="mypage.html" class="back">
@@ -154,12 +167,14 @@
       "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
 
     const SUPABASE_PUBLISHABLE_KEY =
-      "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
+      "＊＊＊";
 
     const mySupabase = window.supabase.createClient(
       SUPABASE_URL,
       SUPABASE_PUBLISHABLE_KEY
     );
+
+    let searchedCode = "";
 
     async function addFriend() {
       const code =
@@ -202,6 +217,8 @@
 
       const friend = data[0];
 
+      searchedCode = friend.friend_code;
+
       resultName.textContent =
         friend.name + " さん";
 
@@ -210,7 +227,44 @@
 
       result.style.display = "block";
     }
+
+    async function confirmAddFriend() {
+      if (!searchedCode) {
+        return;
+      }
+
+      const { error } =
+        await mySupabase.rpc(
+          "add_friend_by_code",
+          {
+            search_code: searchedCode
+          }
+        );
+
+      if (error) {
+        if (error.message.includes("CANNOT_ADD_SELF")) {
+          alert("自分自身は友達に追加できません。");
+          return;
+        }
+
+        if (error.message.includes("FRIEND_NOT_FOUND")) {
+          alert("この友達コードの人は見つかりませんでした。");
+          return;
+        }
+
+        alert("友達の追加に失敗しました。");
+        console.error(error);
+        return;
+      }
+
+      alert("友達に追加しました！🎀");
+
+      document.getElementById("result").style.display = "none";
+      document.getElementById("friendCode").value = "";
+      searchedCode = "";
+    }
   </script>
 
 </body>
 </html>
+
