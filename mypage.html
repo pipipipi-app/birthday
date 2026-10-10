@@ -1,37 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>マイページ | #BirthDay</title>
 
   <style>
-    .add-friend-button {
-      display: block;
-      margin-top: 20px;
-      padding: 14px;
-      border-radius: 999px;
-      background: #e9a9c3;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    .logout-button {
-      display: block;
-      width: 100%;
-      margin-top: 12px;
-      padding: 14px;
-      border: none;
-      border-radius: 999px;
-      background: #f3dce6;
-      color: #8a6875;
-      font-weight: bold;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
     body {
       margin: 0;
       min-height: 100vh;
@@ -39,41 +14,28 @@
       font-family: sans-serif;
       color: #5f4b55;
     }
-
     header {
       padding: 20px;
       background: white;
       border-bottom: 1px solid #f0dce5;
       font-weight: bold;
     }
-
     .container {
       width: min(90%, 500px);
       margin: 0 auto;
-      padding: 40px 0;
+      padding: 30px 0 40px;
     }
-
-    .profile {
-      text-align: center;
+    .profile, .friends-card {
       background: white;
       border-radius: 24px;
-      padding: 30px 20px;
+      padding: 25px 20px;
       box-shadow: 0 4px 20px rgba(150, 100, 120, 0.08);
+      margin-bottom: 20px;
     }
-
-    .icon {
-      font-size: 60px;
-    }
-
-    h1 {
-      margin: 10px 0;
-      font-size: 28px;
-    }
-
-    .birthday {
-      margin-top: 8px;
-    }
-
+    .profile { text-align: center; }
+    .icon { font-size: 60px; }
+    h1 { margin: 10px 0; font-size: 28px; }
+    .birthday { margin-top: 8px; }
     .code {
       margin-top: 25px;
       padding: 15px;
@@ -81,28 +43,71 @@
       background: #fff1f6;
       font-size: 14px;
     }
-
     .code strong {
       display: block;
       margin-top: 5px;
       font-size: 20px;
       letter-spacing: 2px;
     }
+    .add-friend-button, .logout-button {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      margin-top: 14px;
+      padding: 14px;
+      border: none;
+      border-radius: 999px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .add-friend-button {
+      background: #e9a9c3;
+      color: white;
+    }
+    .logout-button {
+      background: #f3dce6;
+      color: #8a6875;
+    }
+    .friends-card h2 {
+      margin-top: 0;
+      font-size: 22px;
+      color: #9d5475;
+    }
+    .friend-item {
+      padding: 15px 0;
+      border-bottom: 1px solid #f3e3ea;
+    }
+    .friend-item:last-child { border-bottom: none; }
+    .friend-name {
+      font-weight: bold;
+      font-size: 17px;
+    }
+    .friend-birthday {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #8b747e;
+    }
+    .message {
+      color: #8b747e;
+      text-align: center;
+      line-height: 1.7;
+    }
+    .friend-code {
+      margin-top: 5px;
+      font-size: 12px;
+      color: #a18b95;
+    }
   </style>
 </head>
-
 <body>
-
-  <header>
-    🎂 #BirthDay
-  </header>
+  <header>🎂 #BirthDay</header>
 
   <main class="container">
-
     <section class="profile">
-
       <div class="icon">🎀</div>
-
       <h1 id="userName">こんにちは！</h1>
 
       <p class="birthday">
@@ -121,15 +126,19 @@
       <button id="logoutButton" class="logout-button">
         ログアウト
       </button>
-
     </section>
 
+    <section class="friends-card">
+      <h2>👯‍♀️ 友達リスト</h2>
+      <div id="friendsList" class="message">友達を読み込み中...</div>
+    </section>
   </main>
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
   <script>
-    const SUPABASE_URL = "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+    const SUPABASE_URL =
+      "https://tzttjfxnrqzpmcnnqqfw.supabase.co";
+
     const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Qca22frc8idrxqshZYX1WQ_27hFQpO1";
 
     const mySupabase = window.supabase.createClient(
@@ -149,16 +158,63 @@
         return;
       }
 
-      const userData = user.user_metadata;
+      const userData = user.user_metadata || {};
 
       document.getElementById("userName").textContent =
         userData.name ? userData.name + "さん" : "こんにちは！";
 
       document.getElementById("userBirthday").textContent =
-        userData.birthday ? userData.birthday : "未登録";
+        userData.birthday || "未登録";
 
       document.getElementById("friendCode").textContent =
-        userData.friend_code ? userData.friend_code : "未登録";
+        userData.friend_code || "未登録";
+
+      await loadFriends();
+    }
+
+    async function loadFriends() {
+      const list = document.getElementById("friendsList");
+      list.textContent = "友達を読み込み中...";
+
+      const { data, error } = await mySupabase.rpc("get_my_friends");
+
+      if (error) {
+        console.error(error);
+        list.textContent =
+          "友達を読み込めませんでした。ページを再読み込みしてね。";
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        list.textContent =
+          "まだ友達がいないみたい！「＋ 友達を追加」から追加してね 🎀";
+        return;
+      }
+
+      list.className = "";
+      list.replaceChildren();
+
+      data.forEach((friend) => {
+        const item = document.createElement("div");
+        item.className = "friend-item";
+
+        const name = document.createElement("div");
+        name.className = "friend-name";
+        name.textContent = "🎀 " + (friend.name || "名前未登録") + " さん";
+
+        const birthday = document.createElement("div");
+        birthday.className = "friend-birthday";
+        birthday.textContent = "🎂 誕生日：" +
+          (friend.birthday || "未登録");
+
+        const code = document.createElement("div");
+        code.className = "friend-code";
+        code.textContent = "友達コード：" +
+          (friend.friend_code || "未登録");
+
+        item.append(name, birthday, code);
+        list.appendChild(item);
+      });
     }
 
     async function logout() {
@@ -172,10 +228,10 @@
       window.location.href = "login.html";
     }
 
-    document.getElementById("logoutButton").addEventListener("click", logout);
+    document.getElementById("logoutButton")
+      .addEventListener("click", logout);
 
     loadMyPage();
   </script>
-
 </body>
 </html>
