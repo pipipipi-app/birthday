@@ -350,31 +350,55 @@
       renderCalendar();
     });
 
-    async function loadCalendar() {
-      const { data: { user }, error: userError } =
-        await supabaseClient.auth.getUser();
+ 
+async function loadCalendar() {
+  const { data: { user }, error: userError } =
+    await supabaseClient.auth.getUser();
 
-      if (userError || !user) {
-        statusText.textContent = "ログインが必要だよ。";
-        return;
-      }
+  if (userError || !user) {
+    statusText.textContent = "ログインが必要だよ。";
+    return;
+  }
 
-      const { data, error } =
-        await supabaseClient.rpc("get_my_friends");
+  // 友達一覧を読み込む
+  const { data, error } =
+    await supabaseClient.rpc("get_my_friends");
 
-      if (error) {
-        console.error(error);
-        statusText.textContent =
-          "友達を読み込めなかったよ。もう一度試してね。";
-        return;
-      }
+  if (error) {
+    console.error(error);
+    statusText.textContent =
+      "友達を読み込めなかったよ。もう一度試してね。";
+    return;
+  }
 
-      friends = data || [];
-      statusText.textContent =
-        "友達 " + friends.length + "人の誕生日を確認中";
+  // 自分のプロフィールを読み込む
+  const { data: myProfile, error: profileError } =
+    await supabaseClient
+      .from("profiles")
+      .select("name, birthday, friend_code")
+      .eq("id", user.id)
+      .single();
 
-      renderCalendar();
-    }
+  if (profileError) {
+    console.error(profileError);
+    statusText.textContent =
+      "自分の誕生日を読み込めなかったよ。";
+    return;
+  }
+
+  // 友達と自分をまとめる
+  friends = [
+    ...(data || []),
+    { ...myProfile, isSelf: true }
+  ];
+
+  statusText.textContent =
+    "友達 " + (data || []).length +
+    "人と自分の誕生日を確認中";
+
+  renderCalendar();
+}
+
 
     loadCalendar();
   </script>
